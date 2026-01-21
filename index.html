@@ -314,7 +314,7 @@
                 
                 const rateCell = document.createElement('td');
                 rateCell.className = 'rate';
-                rateCell.textContent = item.rate.toFixed(2) + '%';
+                rateCell.textContent = item.rate.toFixed(4) + '%';
                 
                 row.appendChild(termCell);
                 row.appendChild(rateCell);
@@ -349,8 +349,8 @@
             
             if (days > 360 && days <= 365) {
                 return {
-                    lower: { term: "12M", days: 360, rate: 3.45 },
-                    upper: { term: "12M", days: 360, rate: 3.45 },
+                    lower: { term: "12M", days: 360, rate: 1.548 },
+                    upper: { term: "12M", days: 360, rate: 1.548 },
                     sameTerm: true
                 };
             }
@@ -358,8 +358,8 @@
             
             if (days <= 7) {
                 return {
-                    lower: { term: "1W", days: 7, rate: 2.15 },
-                    upper: { term: "1W", days: 7, rate: 2.15 },
+                    lower: { term: "1W", days: 7, rate: 1.388 },
+                    upper: { term: "1W", days: 7, rate: 1.388 },
                     sameTerm: true
                 };
             }
@@ -377,8 +377,8 @@
             
             
             return {
-                lower: { term: "12M", days: 360, rate: 3.45 },
-                upper: { term: "12M", days: 360, rate: 3.45 },
+                lower: { term: "12M", days: 360, rate: 1.548 },
+                upper: { term: "12M", days: 360, rate: 1.548 },
                 sameTerm: true
             };
         }
