@@ -1,1 +1,234 @@
-<h1>测试用</h1>
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>昆山受托报价20260121</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', 'Microsoft YaHei', sans-serif;
+        }
+        
+        body {
+            background-color: #f8fafc;
+            color: #1e293b;
+            line-height: 1.5;
+            padding: 20px;
+        }
+        
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            background-color: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+            padding: 30px;
+        }
+        
+        header {
+            text-align: center;
+            margin-bottom: 30px;
+            padding-bottom: 20px;
+            border-bottom: 1px solid #e2e8f0;
+        }
+        
+        h1 {
+            color: #0f172a;
+            font-size: 28px;
+            font-weight: 600;
+            margin-bottom: 8px;
+        }
+        
+        .date {
+            color: #64748b;
+            font-size: 16px;
+            font-weight: 400;
+        }
+        
+        .price-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 10px;
+        }
+        
+        .price-table thead {
+            background-color: #f1f5f9;
+        }
+        
+        .price-table th {
+            padding: 16px 12px;
+            text-align: left;
+            font-weight: 600;
+            color: #334155;
+            font-size: 15px;
+            border-bottom: 2px solid #e2e8f0;
+        }
+        
+        .price-table td {
+            padding: 16px 12px;
+            border-bottom: 1px solid #f1f5f9;
+            font-size: 15px;
+        }
+        
+        .price-table tbody tr:hover {
+            background-color: #f8fafc;
+        }
+        
+        .term {
+            display: inline-block;
+            background-color: #e0f2fe;
+            color: #0369a1;
+            padding: 4px 10px;
+            border-radius: 4px;
+            font-size: 13px;
+            font-weight: 500;
+            min-width: 40px;
+            text-align: center;
+        }
+        
+        .price {
+            font-weight: 600;
+            color: #0d9488;
+            font-size: 16px;
+        }
+        
+        .unit {
+            color: #64748b;
+            font-size: 14px;
+            margin-left: 4px;
+        }
+        
+        .description {
+            color: #64748b;
+            font-size: 14px;
+            max-width: 300px;
+        }
+        
+        .footer {
+            margin-top: 30px;
+            padding-top: 20px;
+            border-top: 1px solid #e2e8f0;
+            text-align: center;
+            color: #94a3b8;
+            font-size: 14px;
+        }
+        
+        /* 响应式调整 */
+        @media (max-width: 768px) {
+            .container {
+                padding: 20px;
+            }
+            
+            h1 {
+                font-size: 24px;
+            }
+            
+            .price-table th, 
+            .price-table td {
+                padding: 12px 8px;
+                font-size: 14px;
+            }
+            
+            .price {
+                font-size: 15px;
+            }
+        }
+        
+        @media (max-width: 480px) {
+            .price-table {
+                display: block;
+                overflow-x: auto;
+            }
+            
+            .container {
+                padding: 15px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>报价系统</h1>
+            <div class="date">2026年1月21日</div>
+        </header>
+        
+        <main>
+            <table class="price-table">
+                <thead>
+                    <tr>
+                        <th width="15%">期限代码</th>
+                        <th width="25%">期限说明</th>
+                        <th width="30%">基准价格</th>
+                    </tr>
+                </thead>
+                <tbody id="price-list">
+                    <!-- 数据将通过JavaScript动态加载 -->
+                </tbody>
+            </table>
+        </main>
+        
+        <div class="footer">
+            <p>数据更新日期: 2026年1月21日 09:00 | 报价仅供参考，具体以实际合同为准</p>
+        </div>
+    </div>
+
+    <script>
+        // 报价数据
+        const priceData = [
+            { code: "1w", term: "1周", price: 1250.50 },
+            { code: "2w", term: "2周", price: 2450.00 },
+            { code: "1m", term: "1个月", price: 4800.75 },
+            { code: "3m", term: "3个月", price: 13800.00 },
+            { code: "6m", term: "6个月", price: 26500.50 },
+            { code: "9m", term: "9个月", price: 38500.00 },
+            { code: "12m", term: "12个月", price: 49800.25 }
+        ];
+        
+        // 初始化函数
+        function init() {
+            // 设置日期显示
+            const currentDate = new Date(2026, 0, 21);
+            const dateString = currentDate.getFullYear() + '年' + 
+                              (currentDate.getMonth() + 1) + '月' + 
+                              currentDate.getDate() + '日';
+            
+            document.querySelector('.date').textContent = dateString;
+            
+            // 渲染报价列表
+            renderPriceList();
+        }
+        
+        // 渲染报价列表
+        function renderPriceList() {
+            const priceList = document.getElementById('price-list');
+            priceList.innerHTML = '';
+            
+            priceData.forEach(item => {
+                const row = document.createElement('tr');
+                
+                row.innerHTML = `
+                    <td><span class="term">${item.code}</span></td>
+                    <td>${item.term}</td>
+                    <td><span class="price">${formatCurrency(item.price)}</span><span class="unit">元</span></td>
+                    <td class="description">${item.description}</td>
+                `;
+                
+                priceList.appendChild(row);
+            });
+        }
+        
+        // 格式化货币显示
+        function formatCurrency(value) {
+            // 保留两位小数，添加千分位分隔符
+            return value.toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+        }
+        
+        // 页面加载完成后初始化
+        document.addEventListener('DOMContentLoaded', init);
+    </script>
+</body>
+</html>
