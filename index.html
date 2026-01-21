@@ -3,232 +3,513 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>昆山受托报价20260121</title>
+    <title>KS受托业务报价</title>
     <style>
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
-            font-family: 'Segoe UI', 'Microsoft YaHei', sans-serif;
         }
         
         body {
-            background-color: #f8fafc;
-            color: #1e293b;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+            background-color: #f5f7fa;
+            color: #333;
             line-height: 1.5;
             padding: 20px;
+            min-height: 100vh;
         }
         
         .container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 30px;
             max-width: 1000px;
             margin: 0 auto;
-            background-color: white;
-            border-radius: 8px;
-            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
-            padding: 30px;
         }
         
-        header {
+        .section {
+            flex: 1;
+            min-width: 300px;
+            background-color: white;
+            border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+            overflow: hidden;
+        }
+        
+        .header {
+            background-color: #1a365d;
+            color: white;
+            padding: 20px;
             text-align: center;
-            margin-bottom: 30px;
-            padding-bottom: 20px;
+        }
+        
+        .header h2 {
+            font-size: 1.4rem;
+            font-weight: 600;
+            letter-spacing: 0.5px;
+        }
+        
+        /* 标准利率报价样式 */
+        .rate-table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        
+        .rate-table th {
+            background-color: #edf2f7;
+            color: #2d3748;
+            font-weight: 600;
+            text-align: center;
+            padding: 18px 12px;
+            font-size: 0.95rem;
             border-bottom: 1px solid #e2e8f0;
         }
         
-        h1 {
-            color: #0f172a;
-            font-size: 28px;
-            font-weight: 600;
-            margin-bottom: 8px;
-        }
-        
-        .date {
-            color: #64748b;
-            font-size: 16px;
-            font-weight: 400;
-        }
-        
-        .price-table {
-            width: 100%;
-            border-collapse: collapse;
-            margin-top: 10px;
-        }
-        
-        .price-table thead {
-            background-color: #f1f5f9;
-        }
-        
-        .price-table th {
-            padding: 16px 12px;
-            text-align: left;
-            font-weight: 600;
-            color: #334155;
-            font-size: 15px;
-            border-bottom: 2px solid #e2e8f0;
-        }
-        
-        .price-table td {
-            padding: 16px 12px;
-            border-bottom: 1px solid #f1f5f9;
-            font-size: 15px;
-        }
-        
-        .price-table tbody tr:hover {
-            background-color: #f8fafc;
+        .rate-table td {
+            text-align: center;
+            padding: 22px 12px;
+            border-bottom: 1px solid #e2e8f0;
         }
         
         .term {
-            display: inline-block;
-            background-color: #e0f2fe;
-            color: #0369a1;
-            padding: 4px 10px;
-            border-radius: 4px;
-            font-size: 13px;
+            color: #4a5568;
             font-weight: 500;
-            min-width: 40px;
+            font-size: 1rem;
+        }
+        
+        .rate {
+            color: #1a202c;
+            font-weight: 600;
+            font-size: 1.3rem;
+        }
+        
+        .rate-table tr:last-child td {
+            border-bottom: none;
+        }
+        
+        .rate-table tr:hover {
+            background-color: #f7fafc;
+        }
+        
+        /* 非标准期限计算样式 */
+        .calculator {
+            padding: 25px;
+        }
+        
+        .input-group {
+            margin-bottom: 20px;
+        }
+        
+        .input-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 500;
+            color: #4a5568;
+        }
+        
+        .input-group input {
+            width: 100%;
+            padding: 12px 15px;
+            border: 1px solid #cbd5e0;
+            border-radius: 6px;
+            font-size: 1rem;
+            transition: border-color 0.3s;
+        }
+        
+        .input-group input:focus {
+            border-color: #4299e1;
+            outline: none;
+        }
+        
+        .calc-btn {
+            width: 100%;
+            background-color: #4299e1;
+            color: white;
+            border: none;
+            padding: 14px;
+            border-radius: 6px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background-color 0.3s;
+            margin-bottom: 25px;
+        }
+        
+        .calc-btn:hover {
+            background-color: #3182ce;
+        }
+        
+        .result-container {
+            background-color: #f7fafc;
+            border-radius: 6px;
+            padding: 20px;
+            border-left: 4px solid #4299e1;
+        }
+        
+        .error-container {
+            background-color: #fed7d7;
+            border-radius: 6px;
+            padding: 20px;
+            border-left: 4px solid #e53e3e;
+        }
+        
+        .result-title {
+            font-weight: 600;
+            color: #2d3748;
+            margin-bottom: 15px;
+            font-size: 1.1rem;
             text-align: center;
         }
         
-        .price {
+        .error-title {
             font-weight: 600;
-            color: #0d9488;
-            font-size: 16px;
+            color: #742a2a;
+            margin-bottom: 15px;
+            font-size: 1.1rem;
+            text-align: center;
         }
         
-        .unit {
-            color: #64748b;
-            font-size: 14px;
-            margin-left: 4px;
+        .result-content {
+            text-align: center;
         }
         
-        .description {
-            color: #64748b;
-            font-size: 14px;
-            max-width: 300px;
+        .result-rate {
+            color: #1a202c;
+            font-weight: 600;
+            font-size: 1.8rem;
+            margin: 15px 0;
+            color: #2b6cb0;
+        }
+        
+        .result-days {
+            color: #4a5568;
+            font-size: 1rem;
+            margin-top: 10px;
+        }
+        
+        .error-message {
+            color: #742a2a;
+            font-size: 1.1rem;
+            text-align: center;
+            padding: 10px 0;
         }
         
         .footer {
-            margin-top: 30px;
-            padding-top: 20px;
-            border-top: 1px solid #e2e8f0;
+            padding: 16px;
             text-align: center;
-            color: #94a3b8;
-            font-size: 14px;
+            font-size: 0.85rem;
+            color: #718096;
+            border-top: 1px solid #e2e8f0;
         }
         
-        /* 响应式调整 */
         @media (max-width: 768px) {
             .container {
-                padding: 20px;
+                flex-direction: column;
             }
             
-            h1 {
-                font-size: 24px;
-            }
-            
-            .price-table th, 
-            .price-table td {
-                padding: 12px 8px;
-                font-size: 14px;
-            }
-            
-            .price {
-                font-size: 15px;
-            }
-        }
-        
-        @media (max-width: 480px) {
-            .price-table {
-                display: block;
-                overflow-x: auto;
-            }
-            
-            .container {
-                padding: 15px;
+            .section {
+                min-width: 100%;
             }
         }
     </style>
 </head>
 <body>
     <div class="container">
-        <header>
-            <h1>报价系统</h1>
-            <div class="date">2026年1月21日</div>
-        </header>
         
-        <main>
-            <table class="price-table">
+        <div class="section">
+            <div class="header">
+                <h2>标准期限利率报价</h2>
+            </div>
+            
+            <table class="rate-table">
                 <thead>
                     <tr>
-                        <th width="15%">期限代码</th>
-                        <th width="25%">期限说明</th>
-                        <th width="30%">基准价格</th>
+                        <th>期限</th>
+                        <th>利率 (%)</th>
                     </tr>
                 </thead>
-                <tbody id="price-list">
-                    <!-- 数据将通过JavaScript动态加载 -->
+                <tbody id="ratesBody">
+                    <!-- 利率数据将通过JavaScript动态生成 -->
                 </tbody>
             </table>
-        </main>
+            
+            <div class="footer">
+                数据更新: <span id="updateDate"></span>
+            </div>
+        </div>
         
-        <div class="footer">
-            <p>数据更新日期: 2026年1月21日 09:00 | 报价仅供参考，具体以实际合同为准</p>
+        <!-- 右边：非标准期限利率计算 -->
+        <div class="section">
+            <div class="header">
+                <h2>非标准期限利率计算</h2>
+            </div>
+            
+            <div class="calculator">
+                <div class="input-group">
+                    <label for="startDate">起息日 (yyyymmdd)</label>
+                    <input type="text" id="startDate" placeholder="例如：20231015" maxlength="8">
+                </div>
+                
+                <div class="input-group">
+                    <label for="endDate">到期日 (yyyymmdd)</label>
+                    <input type="text" id="endDate" placeholder="例如：20240315" maxlength="8">
+                </div>
+                
+                <button class="calc-btn" id="calculateBtn">获取报价</button>
+                
+                <!-- 正常结果显示区域 -->
+                <div class="result-container" id="resultContainer" style="display: none;">
+                    <div class="result-title">计算结果</div>
+                    <div class="result-content">
+                        <div class="result-rate" id="rateResult">-</div>
+                        <div class="result-days" id="daysResult">-</div>
+                    </div>
+                </div>
+                
+                <!-- 错误提示区域 -->
+                <div class="error-container" id="errorContainer" style="display: none;">
+                    <div class="error-title">提示</div>
+                    <div class="error-message" id="errorMessage">-</div>
+                </div>
+            </div>
         </div>
     </div>
 
     <script>
-        // 报价数据
-        const priceData = [
-            { code: "1w", term: "1周", price: 1250.50 },
-            { code: "2w", term: "2周", price: 2450.00 },
-            { code: "1m", term: "1个月", price: 4800.75 },
-            { code: "3m", term: "3个月", price: 13800.00 },
-            { code: "6m", term: "6个月", price: 26500.50 },
-            { code: "9m", term: "9个月", price: 38500.00 },
-            { code: "12m", term: "12个月", price: 49800.25 }
+        
+        const standardRates = [
+            { term: "1W", days: 7, rate: 1.388 },
+            { term: "2W", days: 14, rate: 1.497 },
+            { term: "1M", days: 30, rate: 1.459 },
+            { term: "3M", days: 90, rate: 1.500 },
+            { term: "6M", days: 180, rate: 1.520 },
+            { term: "9M", days: 270, rate: 1.537 },
+            { term: "12M", days: 360, rate: 1.548 }
         ];
         
-        // 初始化函数
-        function init() {
-            // 设置日期显示
-            const currentDate = new Date(2026, 0, 21);
-            const dateString = currentDate.getFullYear() + '年' + 
-                              (currentDate.getMonth() + 1) + '月' + 
-                              currentDate.getDate() + '日';
-            
-            document.querySelector('.date').textContent = dateString;
-            
-            // 渲染报价列表
-            renderPriceList();
-        }
+        // 数据更新日期
+        const updateDate = "2026-01-21";
         
-        // 渲染报价列表
-        function renderPriceList() {
-            const priceList = document.getElementById('price-list');
-            priceList.innerHTML = '';
+        
+        function initStandardRates() {
+            const ratesBody = document.getElementById('ratesBody');
+            const updateDateElement = document.getElementById('updateDate');
             
-            priceData.forEach(item => {
+            
+            updateDateElement.textContent = updateDate;
+            
+            
+            ratesBody.innerHTML = '';
+            
+            
+            standardRates.forEach(item => {
                 const row = document.createElement('tr');
                 
-                row.innerHTML = `
-                    <td><span class="term">${item.code}</span></td>
-                    <td>${item.term}</td>
-                    <td><span class="price">${formatCurrency(item.price)}</span><span class="unit">元</span></td>
-                    <td class="description">${item.description}</td>
-                `;
                 
-                priceList.appendChild(row);
+                const termCell = document.createElement('td');
+                termCell.className = 'term';
+                termCell.textContent = item.term;
+                
+                
+                const rateCell = document.createElement('td');
+                rateCell.className = 'rate';
+                rateCell.textContent = item.rate.toFixed(2) + '%';
+                
+                row.appendChild(termCell);
+                row.appendChild(rateCell);
+                ratesBody.appendChild(row);
             });
         }
         
-        // 格式化货币显示
-        function formatCurrency(value) {
-            // 保留两位小数，添加千分位分隔符
-            return value.toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+        
+        function calculateDaysBetween(startDateStr, endDateStr) {
+            
+            const startYear = parseInt(startDateStr.substring(0, 4));
+            const startMonth = parseInt(startDateStr.substring(4, 6)) - 1;
+            const startDay = parseInt(startDateStr.substring(6, 8));
+            
+            const endYear = parseInt(endDateStr.substring(0, 4));
+            const endMonth = parseInt(endDateStr.substring(4, 6)) - 1;
+            const endDay = parseInt(endDateStr.substring(6, 8));
+            
+            
+            const startDate = new Date(startYear, startMonth, startDay);
+            const endDate = new Date(endYear, endMonth, endDay);
+            
+            
+            const timeDiff = endDate.getTime() - startDate.getTime();
+            const daysDiff = Math.ceil(timeDiff / (1000 * 3600 * 24));
+            
+            return daysDiff;
         }
         
-        // 页面加载完成后初始化
-        document.addEventListener('DOMContentLoaded', init);
+        
+        function findRateRange(days) {
+            
+            if (days > 360 && days <= 365) {
+                return {
+                    lower: { term: "12M", days: 360, rate: 3.45 },
+                    upper: { term: "12M", days: 360, rate: 3.45 },
+                    sameTerm: true
+                };
+            }
+            
+            
+            if (days <= 7) {
+                return {
+                    lower: { term: "1W", days: 7, rate: 2.15 },
+                    upper: { term: "1W", days: 7, rate: 2.15 },
+                    sameTerm: true
+                };
+            }
+            
+            
+            for (let i = 0; i < standardRates.length - 1; i++) {
+                if (days > standardRates[i].days && days <= standardRates[i + 1].days) {
+                    return {
+                        lower: standardRates[i],
+                        upper: standardRates[i + 1],
+                        sameTerm: false
+                    };
+                }
+            }
+            
+            
+            return {
+                lower: { term: "12M", days: 360, rate: 3.45 },
+                upper: { term: "12M", days: 360, rate: 3.45 },
+                sameTerm: true
+            };
+        }
+        
+        
+        function calculateCustomRate(days, range) {
+            if (range.sameTerm) {
+                return range.lower.rate;
+            }
+            
+            
+            const lowerRate = range.lower.rate;
+            const upperRate = range.upper.rate;
+            const lowerDays = range.lower.days;
+            const upperDays = range.upper.days;
+            
+            const rate = lowerRate + (upperRate - lowerRate) * (days - lowerDays) / (upperDays - lowerDays);
+            return rate;
+        }
+        
+        
+        function showError(message) {
+            
+            document.getElementById('resultContainer').style.display = 'none';
+            
+            
+            document.getElementById('errorMessage').textContent = message;
+            document.getElementById('errorContainer').style.display = 'block';
+        }
+        
+        // 显示正常结果
+        function showResult(rate, days) {
+            // 隐藏错误信息
+            document.getElementById('errorContainer').style.display = 'none';
+            
+            // 显示正常结果
+            document.getElementById('rateResult').textContent = rate.toFixed(4) + '%';
+            document.getElementById('daysResult').textContent = '期限: ' + days + ' 天';
+            document.getElementById('resultContainer').style.display = 'block';
+        }
+        
+        
+        function calculateRate() {
+            const startDateInput = document.getElementById('startDate').value.trim();
+            const endDateInput = document.getElementById('endDate').value.trim();
+            
+            
+            if (!startDateInput || !endDateInput) {
+                showError('请输入起息日和到期日');
+                return;
+            }
+            
+            
+            const dateRegex = /^\d{8}$/;
+            if (!dateRegex.test(startDateInput) || !dateRegex.test(endDateInput)) {
+                showError('日期格式应为yyyymmdd，例如：20231015');
+                return;
+            }
+            
+            
+            let days;
+            try {
+                days = calculateDaysBetween(startDateInput, endDateInput);
+            } catch (error) {
+                showError('日期无效，请检查输入的日期是否正确');
+                return;
+            }
+            
+            if (days <= 0) {
+                showError('到期日必须晚于起息日');
+                return;
+            }
+            
+            // 检查是否超过365天
+            if (days > 365) {
+                showError('不支持一年期以上业务报价');
+                return;
+            }
+            
+            // 找到对应的标准期限区间
+            const range = findRateRange(days);
+            
+            // 计算利率
+            const rate = calculateCustomRate(days, range);
+            
+            // 显示结果
+            showResult(rate, days);
+        }
+        
+        // 页面加载完成后执行初始化
+        document.addEventListener('DOMContentLoaded', function() {
+            initStandardRates();
+            
+            // 绑定计算按钮点击事件
+            document.getElementById('calculateBtn').addEventListener('click', calculateRate);
+            
+            // 为输入框添加回车键支持
+            document.getElementById('startDate').addEventListener('keypress', function(e) {
+                if (e.key === 'Enter') calculateRate();
+            });
+            
+            document.getElementById('endDate').addEventListener('keypress', function(e) {
+                if (e.key === 'Enter') calculateRate();
+            });
+            
+            // 设置今天的日期作为示例
+            const today = new Date();
+            const futureDate = new Date();
+            futureDate.setDate(today.getDate() + 150);
+            
+            // 格式化日期为yyyymmdd
+            function formatDate(date) {
+                const year = date.getFullYear();
+                const month = String(date.getMonth() + 1).padStart(2, '0');
+                const day = String(date.getDate()).padStart(2, '0');
+                return `${year}${month}${day}`;
+            }
+            
+            // 设置示例日期
+            document.getElementById('startDate').value = formatDate(today);
+            document.getElementById('endDate').value = formatDate(futureDate);
+            
+            // 添加输入框输入限制，只能输入数字
+            document.getElementById('startDate').addEventListener('input', function(e) {
+                this.value = this.value.replace(/[^\d]/g, '');
+            });
+            
+            document.getElementById('endDate').addEventListener('input', function(e) {
+                this.value = this.value.replace(/[^\d]/g, '');
+            });
+        });
     </script>
 </body>
 </html>
