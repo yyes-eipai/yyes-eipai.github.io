@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>利率报价系统</title>
+    <title>KS受托报价</title>
     <style>
         * {
             margin: 0;
@@ -176,8 +176,8 @@
         
         .result-rate {
             color: #1a202c;
-            font-weight: 600;
-            font-size: 1.8rem;
+            font-weight: 650;
+            font-size: 2.5rem;
             margin: 15px 0;
             color: #2b6cb0;
         }
@@ -229,34 +229,9 @@
 </head>
 <body>
     <div class="container">
-        <!-- 左边：标准期限利率报价 -->
         <div class="section">
             <div class="header">
-                <h2>标准期限利率报价</h2>
-            </div>
-            
-            <table class="rate-table">
-                <thead>
-                    <tr>
-                        <th>期限</th>
-                        <th>报价 (%)</th>
-                    </tr>
-                </thead>
-                <tbody id="ratesBody">
-                    <!-- 利率数据将通过JavaScript动态生成 -->
-                </tbody>
-            </table>
-            
-            <div class="footer">
-                数据更新: <span id="updateDate"></span>
-                <div class="fee-note">欢迎询价～～～</div>
-            </div>
-        </div>
-        
-        <!-- 右边：非标准期限利率计算 -->
-        <div class="section">
-            <div class="header">
-                <h2>非标准期限利率计算</h2>
+                <h2>非标期限利率报价</h2>
             </div>
             
             <div class="calculator">
@@ -277,8 +252,6 @@
                     <div class="result-title">计算结果</div>
                     <div class="result-content">
                         <div class="result-rate" id="rateResult">-</div>
-                        <div class="decimal-note">(保留4位小数，向上进位)</div>
-                        <div class="fee-note">(报价=基准值减优惠后插值计算+0.20%手续费)</div>
                         <div class="result-days" id="daysResult">-</div>
                     </div>
                 </div>
@@ -290,24 +263,45 @@
                 </div>
             </div>
         </div>
+        
+        <!-- 右边：标准期限利率报价 -->
+        <div class="section">
+            <div class="header">
+                <h2>标准期限利率报价</h2>
+            </div>
+            
+            <table class="rate-table">
+                <thead>
+                    <tr>
+                        <th>期限</th>
+                        <th>报价 (%)</th>
+                    </tr>
+                </thead>
+                <tbody id="ratesBody">
+                    <!-- 利率数据将通过JavaScript动态生成 -->
+                </tbody>
+            </table>
+            
+            <div class="footer">
+                数据更新: <span id="updateDate"></span>
+            </div>
+        </div>
     </div>
 
     <script>
-        // 手续费率常量
-        const SERVICE_FEE_RATE = 0.20; // 手续费率0.20%
-        
-        // 各期限优惠率
+        const SERVICE_FEE_RATE = 0.20; 
+
         const DISCOUNT_RATES = {
-            "1W": 0.30,  // 1W优惠减0.30%
-            "2W": 0.30,  // 2W优惠减0.35%
-            "1M": 0.30,  // 1M优惠减0.30%
-            "3M": 0.30,  // 3M优惠减0.40%
-            "6M": 0.30,  // 6M优惠减0.45%
-            "9M": 0.30,  // 9M优惠减0.30%
-            "12M": 0.30  // 12M优惠减0.45%
+            "1W": 0.30,
+            "2W": 0.30,
+            "1M": 0.30,
+            "3M": 0.30,
+            "6M": 0.30,
+            "9M": 0.30,
+            "12M": 0.30
         };
         
-        // 基础利率数据 - 由后台人员直接在代码中录入
+        // 基础利率数据
         const baseRates = [
             { term: "1W", days: 7, baseRate: 1.497 },
             { term: "2W", days: 14, baseRate: 1.59 },
@@ -486,24 +480,21 @@
             };
         }
         
-        // 插值计算优惠后的基准利率（修正版）
+        // 插
         function interpolateDiscountedRate(days, range) {
             if (range.sameTerm) {
                 return range.lower.discountedRate;
             }
             
-            // 改进的线性插值计算，避免浮点数精度问题
             const lowerDiscountedRate = range.lower.discountedRate;
             const upperDiscountedRate = range.upper.discountedRate;
             const lowerDays = range.lower.days;
             const upperDays = range.upper.days;
             
-            // 分步精确计算，避免浮点数误差累积
             const rateDiff = upperDiscountedRate - lowerDiscountedRate;
             const daysDiff = days - lowerDays;
             const totalDaysDiff = upperDays - lowerDays;
             
-            // 使用高精度计算
             const ratio = daysDiff / totalDaysDiff;
             const rateIncrease = rateDiff * ratio;
             const discountedRate = lowerDiscountedRate + rateIncrease;
@@ -513,52 +504,13 @@
         
         // 计算非标准期限的最终报价（修正版）
         function calculateCustomQuotedRate(days, range) {
-            // 插值计算优惠后的基准利率（先减优惠，再插值）
+            // 插
             const discountedRate = interpolateDiscountedRate(days, range);
             
             // 计算最终报价：优惠后基准利率 + 手续费
             const quotedRate = discountedRate + SERVICE_FEE_RATE;
             
-            // 为了显示详细计算过程，也计算原始基础利率的插值
-            let baseRateInterpolated = 0;
-            if (!range.sameTerm) {
-                baseRateInterpolated = range.lower.baseRate + (range.upper.baseRate - range.lower.baseRate) * (days - range.lower.days) / (range.upper.days - range.lower.days);
-            } else {
-                baseRateInterpolated = range.lower.baseRate;
-            }
-            
-            // 添加详细计算日志
-            console.log(`[DEBUG] 详细插值计算过程:
-    下界: ${range.lower.term} (${range.lower.days}天)
-      基础利率: ${range.lower.baseRate}%
-      优惠率: ${range.lower.discountRate}%
-      优惠后基准: ${range.lower.discountedRate.toFixed(6)}%
-    
-    上界: ${range.upper.term} (${range.upper.days}天)
-      基础利率: ${range.upper.baseRate}%
-      优惠率: ${range.upper.discountRate}%
-      优惠后基准: ${range.upper.discountedRate.toFixed(6)}%
-    
-    插值参数:
-      天数差: ${days} - ${range.lower.days} = ${days - range.lower.days}
-      总天数差: ${range.upper.days} - ${range.lower.days} = ${range.upper.days - range.lower.days}
-      比率: (${days - range.lower.days}) / (${range.upper.days - range.lower.days}) = ${((days - range.lower.days) / (range.upper.days - range.lower.days)).toFixed(6)}
-    
-    优惠后基准利率插值:
-      ${range.lower.discountedRate.toFixed(6)} + (${range.upper.discountedRate.toFixed(6)} - ${range.lower.discountedRate.toFixed(6)}) × (${days} - ${range.lower.days}) / (${range.upper.days} - ${range.lower.days})
-      = ${range.lower.discountedRate.toFixed(6)} + ${(range.upper.discountedRate - range.lower.discountedRate).toFixed(6)} × ${((days - range.lower.days) / (range.upper.days - range.lower.days)).toFixed(6)}
-      = ${range.lower.discountedRate.toFixed(6)} + ${((range.upper.discountedRate - range.lower.discountedRate) * (days - range.lower.days) / (range.upper.days - range.lower.days)).toFixed(6)}
-      = ${discountedRate.toFixed(6)}%
-    
-    最终报价计算:
-      优惠后基准利率: ${discountedRate.toFixed(6)}%
-      手续费率: ${SERVICE_FEE_RATE}%
-      相加结果: ${(discountedRate + SERVICE_FEE_RATE).toFixed(6)}%
-      向上进位: ${roundUpToFourDecimals(discountedRate + SERVICE_FEE_RATE).toFixed(4)}%
-    `);
-            
             return {
-                baseRateInterpolated: baseRateInterpolated,
                 discountedRate: discountedRate,
                 quotedRate: quotedRate
             };
@@ -586,8 +538,7 @@
             document.getElementById('rateResult').textContent = roundedQuotedRate.toFixed(4) + '%';
             document.getElementById('daysResult').textContent = '期限: ' + days + ' 天';
             document.getElementById('resultContainer').style.display = 'block';
-            
-            
+        }
         
         // 获取输入日期并计算
         function calculateRate() {
