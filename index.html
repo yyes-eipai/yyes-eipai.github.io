@@ -249,7 +249,7 @@
             
             <div class="footer">
                 数据更新: <span id="updateDate"></span>
-                <div class="fee-note">(报价=基础利率-优惠+0.20%手续费)</div>
+                <div class="fee-note">欢迎询价～～～</div>
             </div>
         </div>
         
@@ -309,17 +309,17 @@
         
         // 基础利率数据 - 由后台人员直接在代码中录入
         const baseRates = [
-            { term: "1W", days: 7, baseRate: 1.488 },
-            { term: "2W", days: 14, baseRate: 1.597 },
-            { term: "1M", days: 30, baseRate: 1.559 },
-            { term: "3M", days: 90, baseRate: 1.6 },
-            { term: "6M", days: 180, baseRate: 1.62 },
-            { term: "9M", days: 270, baseRate: 1.637 },
-            { term: "12M", days: 360, baseRate: 1.648 }
+            { term: "1W", days: 7, baseRate: 1.497 },
+            { term: "2W", days: 14, baseRate: 1.59 },
+            { term: "1M", days: 30, baseRate: 1.557 },
+            { term: "3M", days: 90, baseRate: 1.598 },
+            { term: "6M", days: 180, baseRate: 1.616 },
+            { term: "9M", days: 270, baseRate: 1.6327 },
+            { term: "12M", days: 360, baseRate: 1.6458 }
         ];
         
         // 数据更新日期
-        const updateDate = "2023-10-15";
+        const updateDate = "2026-01-22";
         
         // 获取期限的优惠率
         function getDiscountRate(term) {
@@ -587,15 +587,7 @@
             document.getElementById('daysResult').textContent = '期限: ' + days + ' 天';
             document.getElementById('resultContainer').style.display = 'block';
             
-            // 控制台显示详细计算过程
-            console.log(`计算详情:
-  期限天数: ${days}天
-  基础利率插值: ${calculationResult.baseRateInterpolated.toFixed(6)}%
-  优惠后基准利率插值: ${calculationResult.discountedRate.toFixed(6)}%
-  手续费率: ${SERVICE_FEE_RATE}%
-  计算报价: ${calculationResult.quotedRate.toFixed(6)}%
-  向上进位报价: ${roundedQuotedRate.toFixed(4)}%`);
-        }
+            
         
         // 获取输入日期并计算
         function calculateRate() {
@@ -686,37 +678,6 @@
             document.getElementById('endDate').addEventListener('input', function(e) {
                 this.value = this.value.replace(/[^\d]/g, '');
             });
-            
-            // 输出示例计算
-            console.log("标准期限报价示例:");
-            baseRates.forEach(item => {
-                const discountRate = getDiscountRate(item.term);
-                const discountedRate = calculateDiscountedRate(item.baseRate, discountRate);
-                const quotedRate = discountedRate + SERVICE_FEE_RATE;
-                const roundedQuotedRate = roundUpToFourDecimals(quotedRate);
-                console.log(`${item.term}: ${item.baseRate}% - ${discountRate}% = ${discountedRate.toFixed(4)}% + ${SERVICE_FEE_RATE}% = ${quotedRate.toFixed(4)}% -> 进位: ${roundedQuotedRate.toFixed(4)}%`);
-            });
-            
-            // 测试非标准期限计算示例
-            console.log("\n非标准期限计算示例 (59天):");
-            const testDays = 59;
-            const testRange = {
-                lower: getRateDataByTerm("1M"),
-                upper: getRateDataByTerm("3M"),
-                sameTerm: false
-            };
-            const testResult = calculateCustomQuotedRate(testDays, testRange);
-            const testRoundedRate = roundUpToFourDecimals(testResult.quotedRate);
-            console.log(`1M基准值: ${testRange.lower.baseRate}% - 优惠${testRange.lower.discountRate}% = ${testRange.lower.discountedRate.toFixed(6)}%`);
-            console.log(`3M基准值: ${testRange.upper.baseRate}% - 优惠${testRange.upper.discountRate}% = ${testRange.upper.discountedRate.toFixed(6)}%`);
-            console.log(`插值计算: ${testRange.lower.discountedRate.toFixed(6)}% + (${testRange.upper.discountedRate.toFixed(6)}% - ${testRange.lower.discountedRate.toFixed(6)}%) × (${testDays}-${testRange.lower.days})/(${testRange.upper.days}-${testRange.lower.days})`);
-            console.log(`优惠后基准利率: ${testResult.discountedRate.toFixed(6)}%`);
-            console.log(`最终报价: ${testResult.discountedRate.toFixed(6)}% + ${SERVICE_FEE_RATE}% = ${testResult.quotedRate.toFixed(6)}%`);
-            console.log(`向上进位报价: ${testRoundedRate.toFixed(4)}%`);
-            
-            // 自动计算示例
-            console.log("\n自动计算示例日期:");
-            calculateRate();
         });
     </script>
 </body>
